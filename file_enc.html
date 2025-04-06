@@ -1,0 +1,97 @@
+{% extends 'encadmin/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title fw-semibold mb-4">File Encryption Using DNA Algorithm</h5>
+        <form method="post" action="#" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Text Input -->
+            <div class="form-group">
+                <label for="file">Upload File:</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".docx, .pdf">
+            </div>            
+            <br>
+            <!-- Key Input -->
+            <div class="form-group">
+                <label for="key">Key:</label>
+                <input type="text" class="form-control" id="key" name="key" placeholder="Enter key">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="dropdown">Select a user:</label>
+                <select class="form-control" id="dropdown" name="dropdown">
+                    <option value="">Select a user</option>
+                    <option value="for everyone">For Everyone</option>
+
+                {% for i in users %}
+
+                    <option value="{{i.username}}">{{i.username}}</option>
+                
+                {% endfor %}
+                </select>
+            </div>
+            <br>
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Encrypt</button>
+        </form>      
+
+
+        <br>
+
+        <div class="container">
+            <h2>Encrypted Files</h2>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Original File</th>
+                  <th>Encrypted File</th>
+                  <th>Key</th>
+                  <th>Read</th>
+                  <th>Sent Date</th>
+                  <th>Viewer</th>
+                  <th>Delete</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for text in files %}
+                <tr>
+                  <td>
+                    {{ text.original_file }}
+                </td>
+                <td>
+                    {{ text.encrypted_file }}
+                </td>
+                  <td>{{ text.key }}</td>
+                  <td>
+                    {% if text.read %}
+                      <span class="text-success">&#10004;</span> <!-- Green tick mark -->
+                    {% else %}
+                      <span class="text-danger">&#10008;</span> <!-- Red cross mark -->
+                    {% endif %}
+                  </td>                  
+                  <td>{{ text.date|date:"d-m-Y" }}</td>
+                  <td>{{ text.user_name }}</td>
+                  <td><a href="{% url 'delete_file' text.pk %}" class="btn btn-danger">Delete</a></td>
+
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+    </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+
+
+
+
+{% endblock %}
